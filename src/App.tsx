@@ -1,4 +1,4 @@
-import "../src/styles/global.css";
+import "./styles/global.css";
 import {
   Box,
   CssBaseline,
@@ -8,20 +8,27 @@ import {
 import { theme } from "./styles/theme";
 import Header from "./components/Header";
 import Home from "./pages/Home";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Details from "./pages/Details";
 
 function App() {
   return (
-    <StyledEngineProvider injectFirst>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <Box minHeight="100vh">
-          <Header />
-          <Box mt="64px" py={4} px={5}>
-            <Home />
+    <Router>
+      <StyledEngineProvider injectFirst>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <Box minHeight="100vh">
+            <Header />
+            <Box mt="64px" py={4} px={5}>
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/details" element={<Details />} />
+              </Routes>
+            </Box>
           </Box>
-        </Box>
-      </ThemeProvider>
-    </StyledEngineProvider>
+        </ThemeProvider>
+      </StyledEngineProvider>
+    </Router>
   );
 }
 

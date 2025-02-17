@@ -4,7 +4,7 @@ import { Country } from "../types/countryDetails";
 type ApiCountry = {
     cca3: string;
     flags: { png: string };
-    name: { official: string };
+    name: { common: string };
     population: number;
     region: string;
     capital?: string[];
@@ -18,7 +18,7 @@ export const getCounties = async (): Promise<Country[]> => {
         const formattedCountries: Country[] = originalData.map((country: ApiCountry) => ({
             id: country.cca3,
             image: country.flags.png,
-            name: country.name.official,
+            name: country.name.common,
             population: country.population,
             region: country.region,
             capital: country.capital?.[0] || "N/A",

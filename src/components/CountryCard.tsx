@@ -9,24 +9,25 @@ import { Country } from "../types/countryDetails";
 
 const CountryCard = ({ cardProps }: { cardProps: Country }) => {
   return (
-    <Card>
+    <Card sx={{ width: "300px", minHeight: "400px" }}>
       <CardActionArea>
         <CardMedia
           component="img"
           image={cardProps.image}
           alt={cardProps.name}
-          height="200px"
-          width="100px"
+          height="180px"
         />
-        <CardContent>
-          <Typography>{cardProps.name}</Typography>
-          <Typography>
+        <CardContent sx={{ px: 3, py: 0 }}>
+          <Typography fontWeight="bold" variant="h6" my={3}>
+            {cardProps.name}
+          </Typography>
+          <Typography variant="body1" gutterBottom>
             <strong>Population:</strong> {cardProps.population}
           </Typography>
-          <Typography>
+          <Typography variant="body1" gutterBottom>
             <strong>Region:</strong> {cardProps.region}
           </Typography>
-          <Typography>
+          <Typography variant="body1" gutterBottom>
             <strong>Capital:</strong> {cardProps.capital}
           </Typography>
         </CardContent>
