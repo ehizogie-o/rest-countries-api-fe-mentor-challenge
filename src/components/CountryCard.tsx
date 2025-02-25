@@ -6,10 +6,17 @@ import {
   Typography,
 } from "@mui/material";
 import { Country } from "../types/countryDetails";
+import { useNavigate } from "react-router-dom";
 
 const CountryCard = ({ cardProps }: { cardProps: Country }) => {
+  const navigate = useNavigate();
   return (
-    <Card sx={{ width: "300px", minHeight: "400px" }}>
+    <Card
+      sx={{ width: "300px", minHeight: "400px" }}
+      onClick={() => {
+        navigate(`/details/${cardProps.id}`);
+      }}
+    >
       <CardActionArea>
         <CardMedia
           component="img"

@@ -22,7 +22,7 @@ function App() {
             <Box mt="64px" py={4} px={5}>
               <Routes>
                 <Route path="/" element={<Home />} />
-                <Route path="/details" element={<Details />} />
+                <Route path="/details/:id" element={<Details />} />
               </Routes>
             </Box>
           </Box>

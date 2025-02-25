@@ -10,6 +10,7 @@ type ApiCountry = {
     capital?: string[];
 };
 
+
 export const getCounties = async (): Promise<Country[]> => {
     try {
         const response = await axios.get("https://restcountries.com/v3.1/all");
@@ -28,5 +29,15 @@ export const getCounties = async (): Promise<Country[]> => {
     } catch (error) {
         console.log(error)
         return [];
+    }
+}
+
+export const getCountriesById = async (id: string) => {
+    try {
+        const response = await axios.get(`https://restcountries.com/v3.1/alpha/${id}`)
+        return response.data[0]
+    } catch (error) {
+        console.log(error)
+        return
     }
 }
