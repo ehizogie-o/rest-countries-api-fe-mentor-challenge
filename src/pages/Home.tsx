@@ -12,7 +12,7 @@ const Home = () => {
     const fetchCountries = async () => {
       try {
         const response = await getCounties();
-        setCountries(response.slice(200, 208));
+        setCountries(response.slice(196, 230));
       } catch (error) {
         console.log(error);
       }

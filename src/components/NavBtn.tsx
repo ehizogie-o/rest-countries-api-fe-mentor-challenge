@@ -1,15 +1,19 @@
 import { Button, SvgIconProps } from "@mui/material";
 
 import { ElementType } from "react";
+import { Link } from "react-router-dom";
 
 interface navBtnProps {
   label: string;
+  link: string;
   icon?: ElementType<SvgIconProps>;
 }
 
-const NavBtn = ({ label, icon: Icon }: navBtnProps) => {
+const NavBtn = ({ label, link, icon: Icon }: navBtnProps) => {
   return (
     <Button
+      component={Link}
+      to={link}
       variant="contained"
       sx={{
         bgcolor: "#fff",

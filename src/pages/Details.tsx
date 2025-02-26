@@ -49,7 +49,8 @@ const Details = () => {
           subRegion: response.subregion,
           capital: response.capital[0],
           topLevelDomain: response.tld[0],
-          currency: Object.keys(response.currencies)[0],
+          currency:
+            response.currencies[Object.keys(response.currencies)[0]].name,
           languages: Object.values(response.languages),
           borderCountries: response.borders || [],
         });
@@ -61,13 +62,20 @@ const Details = () => {
   }, [id]);
   return (
     <Box>
-      <NavBtn label="Back" icon={WestIcon} />
-      <Grid container mt={5}>
+      <NavBtn label="Back" icon={WestIcon} link="/" />
+      <Grid container mt={5} alignItems="center">
         <Grid size={6}>
-          <Box component="img" src={countryDetails.image} />
+          <Box
+            component="img"
+            src={countryDetails.image}
+            width="90%"
+            height={350}
+          />
         </Grid>
         <Grid size={6}>
-          <Typography>{countryDetails.name}</Typography>
+          <Typography variant="h4" fontWeight={700} mb={3}>
+            {countryDetails.name}
+          </Typography>
           <Grid container>
             <Grid size={6}>
               {Object.keys(countryDetails)
@@ -76,11 +84,11 @@ const Details = () => {
                   const data =
                     countryDetails[value as keyof typeof countryDetails];
                   return (
-                    <Typography>
+                    <Typography mb={1}>
                       <strong>{formatString(value)}</strong>:{" "}
                       {Array.isArray(data)
                         ? data.join(", ") // Convert arrays to comma-separated string
-                        : data}
+                        : data.toLocaleString()}
                     </Typography>
                   );
                 })}
@@ -92,7 +100,7 @@ const Details = () => {
                   const data =
                     countryDetails[value as keyof typeof countryDetails];
                   return (
-                    <Typography>
+                    <Typography mb={1}>
                       <strong>{formatString(value)}</strong>:{" "}
                       {Array.isArray(data)
                         ? data.join(", ") // Convert arrays to comma-separated string
@@ -102,6 +110,62 @@ const Details = () => {
                 })}
             </Grid>
           </Grid>
+
+          <Box display="flex" alignItems="center" gap={1} mt={5}>
+            <Typography>
+              <strong>Border Countries:</strong>{" "}
+            </Typography>
+            {countryDetails.borderCountries.length === 0 ? (
+              "N/A"
+            ) : (
+              <Box display="flex" flexDirection="column" gap={1}>
+                <Box display="flex" flexDirection="row" gap={1}>
+                  {countryDetails.borderCountries
+                    .slice(0, 5)
+                    .map((country, index) => {
+                      return (
+                        <Box
+                          key={index}
+                          sx={{
+                            bgcolor: "#fff",
+                            color: "#000",
+                            textTransform: "none",
+                            px: 4,
+                            boxShadow: "0px 0px 5px rgba(0, 0, 0, 0.3)",
+                            borderRadius: 1,
+                          }}
+                        >
+                          {country}
+                        </Box>
+                      );
+                    })}
+                </Box>
+                {countryDetails.borderCountries.length > 5 && (
+                  <Box display="flex" flexDirection="row" gap={1}>
+                    {countryDetails.borderCountries
+                      .slice(5)
+                      .map((country, index) => {
+                        return (
+                          <Box
+                            key={index}
+                            sx={{
+                              bgcolor: "#fff",
+                              color: "#000",
+                              textTransform: "none",
+                              px: 4,
+                              boxShadow: "0px 0px 5px rgba(0, 0, 0, 0.3)",
+                              borderRadius: 1,
+                            }}
+                          >
+                            {country}
+                          </Box>
+                        );
+                      })}
+                  </Box>
+                )}
+              </Box>
+            )}
+          </Box>
         </Grid>
       </Grid>
     </Box>
