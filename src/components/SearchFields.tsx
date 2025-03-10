@@ -1,6 +1,12 @@
 import { TextField, InputAdornment, MenuItem, Typography } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { regions } from "../data/regions";
+import { useState } from "react";
+
+interface SelectFieldProps {
+  onGetCountries: (region: string) => void;
+  onSelectRegion: (region: string) => void;
+}
 
 const NormalInputField = () => {
   return (
@@ -27,12 +33,17 @@ const NormalInputField = () => {
   );
 };
 
-export function SelectField() {
+export function SelectField({
+  onGetCountries,
+  onSelectRegion,
+}: SelectFieldProps) {
+  const [countryRegion, setRegion] = useState("");
   return (
     <TextField
       select
       label="Filter by Region"
       size="small"
+      value={countryRegion}
       sx={{
         width: "20%",
         bgcolor: "#fff",
@@ -40,6 +51,12 @@ export function SelectField() {
         borderRadius: 1,
         boxShadow: "2px 4px 10px rgba(0, 0, 0, 0.1)",
         "& .MuiOutlinedInput-notchedOutline": { border: "none" },
+      }}
+      onChange={(e) => {
+        const selectedRegion = e.target.value; // Get the new value
+        setRegion(selectedRegion); // Update state
+        onSelectRegion(selectedRegion); // Update state
+        onGetCountries(selectedRegion); // Use the new value immediately
       }}
     >
       <MenuItem value="">

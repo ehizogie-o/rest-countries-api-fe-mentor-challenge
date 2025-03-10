@@ -29,7 +29,7 @@ const CountryCard = ({ cardProps }: { cardProps: Country }) => {
             {cardProps.name}
           </Typography>
           <Typography variant="body1" gutterBottom>
-            <strong>Population:</strong> {cardProps.population}
+            <strong>Population:</strong> {cardProps.population.toLocaleString()}
           </Typography>
           <Typography variant="body1" gutterBottom>
             <strong>Region:</strong> {cardProps.region}
