@@ -52,6 +52,27 @@ export const getCountriesByRegion = async (region: string) => {
     }
 }
 
+export const getCountriesByName = async (name: string) => {
+    try {
+        const response = await axios.get(`https://restcountries.com/v3.1/name/${name}`);
+        const originalData = response.data;
+
+        const formattedCountries: Country[] = originalData.map((country: ApiCountry) => ({
+            id: country.cca3,
+            image: country.flags.png,
+            name: country.name.common,
+            population: country.population,
+            region: country.region,
+            capital: country.capital?.[0] || "N/A",
+        }));
+        return formattedCountries;
+
+    } catch (error) {
+        console.log(error)
+        return [];
+    }
+}
+
 export const getCountriesById = async (id: string) => {
     try {
         const response = await axios.get(`https://restcountries.com/v3.1/alpha/${id}`)

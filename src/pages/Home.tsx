@@ -1,13 +1,19 @@
 import { Box, Pagination } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import { useEffect, useState } from "react";
-import { getCountries, getCountriesByRegion } from "../api/countries";
+import {
+  getCountries,
+  getCountriesByName,
+  getCountriesByRegion,
+} from "../api/countries";
 import CountryCard from "../components/CountryCard";
 import { Country } from "../types/countryDetails";
 import NormalInputField, { SelectField } from "../components/SearchFields";
 
 const Home = () => {
   const [countries, setCountries] = useState<Country[]>([]);
+  const [searchValue, setSearchValue] = useState("");
+  const [debouncedQuery, setDebouncedQuery] = useState("");
   const [selectedRegion, setSelectedRegion] = useState("");
   const [count, setCount] = useState<number>(2);
   const [page, setPage] = useState<number>(1);
@@ -19,20 +25,48 @@ const Home = () => {
   };
 
   useEffect(() => {
-    const fetchCountries = async () => {
-      try {
-        const response = await getCountries();
-        const newTotal = response.length;
-        setTotal(newTotal);
-        setCount(Math.round(response.length / itemsPerPage));
-        setCountries(response.slice(0, itemsPerPage));
-      } catch (error) {
-        console.log(error);
-      }
-    };
+    const handler = setTimeout(() => {
+      setDebouncedQuery(searchValue);
+    }, 500);
 
-    fetchCountries();
-  }, []);
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [searchValue]);
+
+  useEffect(() => {
+    if (searchValue === "") {
+      const fetchCountries = async () => {
+        try {
+          const response = await getCountries();
+          const newTotal = response.length;
+          setTotal(newTotal);
+          setCount(Math.round(response.length / itemsPerPage));
+          setCountries(response.slice(0, itemsPerPage));
+        } catch (error) {
+          console.log(error);
+        }
+      };
+
+      fetchCountries();
+    } else {
+      if (debouncedQuery) {
+        const fetchCountriesByName = async () => {
+          try {
+            const response = await getCountriesByName(searchValue);
+            const newTotal = response.length;
+            setTotal(newTotal);
+            setCount(Math.round(response.length / itemsPerPage));
+            setCountries(response.slice(0, itemsPerPage));
+          } catch (error) {
+            console.log(error);
+          }
+        };
+
+        fetchCountriesByName();
+      }
+    }
+  }, [searchValue, debouncedQuery]);
 
   const handleSelectedRegion = (region: string) => {
     setSelectedRegion(region);
@@ -83,7 +117,12 @@ const Home = () => {
   return (
     <Box>
       <Box display="flex">
-        <NormalInputField />
+        <NormalInputField
+          value={searchValue}
+          onChange={(e) => {
+            setSearchValue(e.target.value);
+          }}
+        />
         <SelectField
           onGetCountries={handleGetCountriesByRegion}
           onSelectRegion={handleSelectedRegion}

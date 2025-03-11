@@ -8,9 +8,16 @@ interface SelectFieldProps {
   onSelectRegion: (region: string) => void;
 }
 
-const NormalInputField = () => {
+interface InputFieldProps {
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
+const NormalInputField = ({ value, onChange }: InputFieldProps) => {
   return (
     <TextField
+      onChange={onChange}
+      value={value}
       placeholder="Search for a country..."
       size="small"
       sx={{
