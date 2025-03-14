@@ -9,11 +9,15 @@ import {
 import CountryCard from "../components/CountryCard";
 import { Country } from "../types/countryDetails";
 import NormalInputField, { SelectField } from "../components/SearchFields";
+import { useDebounce } from "use-debounce";
+import SkeletonLoader from "../components/SkeletonLoader";
+
+const arr = Array.from({ length: 4 }, (_, i) => i + 1);
 
 const Home = () => {
   const [countries, setCountries] = useState<Country[]>([]);
   const [searchValue, setSearchValue] = useState("");
-  const [debouncedQuery, setDebouncedQuery] = useState("");
+  const [debouncedQuery] = useDebounce(searchValue, 500);
   const [selectedRegion, setSelectedRegion] = useState("");
   const [count, setCount] = useState<number>(2);
   const [page, setPage] = useState<number>(1);
@@ -24,19 +28,16 @@ const Home = () => {
     setPage(value);
   };
 
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedQuery(searchValue);
-    }, 500);
-
-    return () => {
-      clearTimeout(handler);
-    };
-  }, [searchValue]);
+  const handleSelectedRegion = (region: string) => {
+    setSelectedRegion(region);
+  };
 
   useEffect(() => {
     if (searchValue === "") {
       const fetchCountries = async () => {
+        setCountries([]);
+        setTotal(0);
+        setCount(0);
         try {
           const response = await getCountries();
           const newTotal = response.length;
@@ -44,7 +45,7 @@ const Home = () => {
           setCount(Math.round(response.length / itemsPerPage));
           setCountries(response.slice(0, itemsPerPage));
         } catch (error) {
-          console.log(error);
+          console.error("Error fetching data:", error);
         }
       };
 
@@ -52,47 +53,49 @@ const Home = () => {
     } else {
       if (debouncedQuery) {
         const fetchCountriesByName = async () => {
+          setCountries([]);
+          setTotal(0);
+          setCount(0);
           try {
-            const response = await getCountriesByName(searchValue);
+            const response = await getCountriesByName(debouncedQuery);
             const newTotal = response.length;
             setTotal(newTotal);
             setCount(Math.round(response.length / itemsPerPage));
             setCountries(response.slice(0, itemsPerPage));
           } catch (error) {
-            console.log(error);
+            console.error("Error fetching data:", error);
           }
         };
 
         fetchCountriesByName();
       }
     }
-  }, [searchValue, debouncedQuery]);
+  }, [searchValue, debouncedQuery, selectedRegion]);
 
-  const handleSelectedRegion = (region: string) => {
-    setSelectedRegion(region);
-  };
+  const handleGetCountriesByRegion = async (region: string) => {
+    setCountries([]);
+    setTotal(0);
+    setCount(0);
 
-  const handleGetCountriesByRegion = (region: string) => {
-    const fetchCountriesByRegion = async () => {
-      try {
-        const response = await getCountriesByRegion(region);
-        console.log(response);
+    try {
+      const response = region
+        ? await getCountriesByRegion(region)
+        : await getCountries();
 
-        // Correctly update total and count
-        const newTotal = response.length;
-        setTotal(newTotal);
-        setCount(Math.round(newTotal / itemsPerPage));
+      console.log(response);
 
-        // Slice the results for pagination
-        const value = response.slice(0, itemsPerPage);
-        console.log(value);
-        setCountries(value);
-      } catch (error) {
-        console.log(error);
-      }
-    };
+      // Update total and count
+      const newTotal = response.length;
+      setTotal(newTotal);
+      setCount(Math.ceil(newTotal / itemsPerPage)); // Use `ceil` for accurate pagination
 
-    fetchCountriesByRegion();
+      // Slice results for pagination
+      const paginatedData = response.slice(0, itemsPerPage);
+      console.log(paginatedData);
+      setCountries(paginatedData);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
   };
 
   useEffect(() => {
@@ -108,7 +111,7 @@ const Home = () => {
           setCountries(response.slice(startIndex, endIndex));
         }
       } catch (error) {
-        console.log(error);
+        console.error("Error fetching data:", error);
       }
     };
     fetchAndSliceCountries();
@@ -129,13 +132,21 @@ const Home = () => {
         />
       </Box>
       <Grid container mt="50px" spacing="70px">
-        {countries.map((country) => {
-          return (
-            <Grid size={3} key={country.id}>
-              <CountryCard cardProps={country} />
-            </Grid>
-          );
-        })}
+        {countries.length === 0
+          ? arr.map(() => {
+              return (
+                <Grid size={3}>
+                  <SkeletonLoader />
+                </Grid>
+              );
+            })
+          : countries.map((country) => {
+              return (
+                <Grid size={3} key={country.id}>
+                  <CountryCard cardProps={country} />
+                </Grid>
+              );
+            })}
       </Grid>
       <Box pt={5} display="flex" justifyContent="center">
         <Pagination

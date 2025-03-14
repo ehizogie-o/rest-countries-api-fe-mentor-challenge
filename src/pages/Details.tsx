@@ -13,6 +13,13 @@ function formatString(str: string): string {
   return formattedWord;
 }
 
+const formatData = (data: string | number | string[]) => {
+  if (!data) return "N/A";
+  if (Array.isArray(data)) return data.join(", ");
+  if (typeof data === "number") return data.toLocaleString();
+  return data;
+};
+
 const Details = () => {
   const { id } = useParams<{ id: string }>();
   console.log(id);
@@ -86,9 +93,13 @@ const Details = () => {
                   return (
                     <Typography mb={1}>
                       <strong>{formatString(value)}</strong>:{" "}
-                      {Array.isArray(data)
-                        ? data.join(", ") // Convert arrays to comma-separated string
-                        : data.toLocaleString()}
+                      {data
+                        ? Array.isArray(data)
+                          ? data.join(", ") // Convert arrays to comma-separated string
+                          : typeof data === "number" && data > 999
+                          ? data.toLocaleString()
+                          : data
+                        : "N/A"}
                     </Typography>
                   );
                 })}
@@ -101,10 +112,7 @@ const Details = () => {
                     countryDetails[value as keyof typeof countryDetails];
                   return (
                     <Typography mb={1}>
-                      <strong>{formatString(value)}</strong>:{" "}
-                      {Array.isArray(data)
-                        ? data.join(", ") // Convert arrays to comma-separated string
-                        : data}
+                      <strong>{formatString(value)}</strong>: {formatData(data)}
                     </Typography>
                   );
                 })}
