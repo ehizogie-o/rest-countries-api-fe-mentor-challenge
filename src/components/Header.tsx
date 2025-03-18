@@ -5,7 +5,7 @@ import "../styles/global.css";
 const Header = () => {
   return (
     <AppBar sx={{ bgcolor: "#ffffff" }}>
-      <Toolbar className="header">
+      <Toolbar sx={{ px: { sm: 5, xs: 2 } }}>
         <Typography variant="h6" fontWeight="bold" color="#000">
           Where in the world?
         </Typography>
@@ -13,7 +13,10 @@ const Header = () => {
           <IconButton sx={{ color: "#000" }}>
             <DarkModeOutlinedIcon fontSize="small" />
           </IconButton>
-          <Typography variant="body2" color="#000">
+          <Typography
+            variant="body2"
+            sx={{ color: "#000", display: { xs: "none", sm: "block" } }}
+          >
             Dark Mode
           </Typography>
         </Box>

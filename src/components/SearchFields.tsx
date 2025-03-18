@@ -21,7 +21,7 @@ const NormalInputField = ({ value, onChange }: InputFieldProps) => {
       placeholder="Search for a country..."
       size="small"
       sx={{
-        width: "40%",
+        width: { sm: "40%", xs: "100%" },
         bgcolor: "#fff",
         borderRadius: 1,
         boxShadow: "2px 4px 10px rgba(0, 0, 0, 0.1)",
@@ -52,9 +52,9 @@ export function SelectField({
       size="small"
       value={countryRegion}
       sx={{
-        width: "20%",
+        width: { md: "20%", sm: "30%", xs: "70%" },
         bgcolor: "#fff",
-        ml: "auto",
+        ml: { sm: "auto" },
         borderRadius: 1,
         boxShadow: "2px 4px 10px rgba(0, 0, 0, 0.1)",
         "& .MuiOutlinedInput-notchedOutline": { border: "none" },

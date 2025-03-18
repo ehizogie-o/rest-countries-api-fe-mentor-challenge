@@ -1,5 +1,4 @@
-import { Box, Typography } from "@mui/material";
-import Grid from "@mui/material/Grid2";
+import { Box, Typography, Grid2 as Grid } from "@mui/material";
 import WestIcon from "@mui/icons-material/West";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -71,7 +70,7 @@ const Details = () => {
     <Box>
       <NavBtn label="Back" icon={WestIcon} link="/" />
       <Grid container mt={5} alignItems="center">
-        <Grid size={6}>
+        <Grid size={{ md: 6, sm: 12 }}>
           <Box
             component="img"
             src={countryDetails.image}
@@ -79,12 +78,12 @@ const Details = () => {
             height={350}
           />
         </Grid>
-        <Grid size={6}>
+        <Grid size={{ md: 6, sm: 12 }} sx={{ mt: { xs: 3, sm: 3, md: 0 } }}>
           <Typography variant="h4" fontWeight={700} mb={3}>
             {countryDetails.name}
           </Typography>
           <Grid container>
-            <Grid size={6}>
+            <Grid size={{ md: 6, sm: 12 }}>
               {Object.keys(countryDetails)
                 .slice(2, 7)
                 .map((value) => {
@@ -104,7 +103,7 @@ const Details = () => {
                   );
                 })}
             </Grid>
-            <Grid size={6}>
+            <Grid size={{ md: 6, sm: 12 }}>
               {Object.keys(countryDetails)
                 .slice(7, 10)
                 .map((value) => {

@@ -119,7 +119,13 @@ const Home = () => {
 
   return (
     <Box>
-      <Box display="flex">
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: { sm: "row", xs: "column" },
+          gap: 4,
+        }}
+      >
         <NormalInputField
           value={searchValue}
           onChange={(e) => {
@@ -135,14 +141,19 @@ const Home = () => {
         {countries.length === 0
           ? arr.map(() => {
               return (
-                <Grid size={3}>
+                <Grid size={{ md: 3, sm: 4 }}>
                   <SkeletonLoader />
                 </Grid>
               );
             })
           : countries.map((country) => {
               return (
-                <Grid size={3} key={country.id}>
+                <Grid
+                  size={{ lg: 3, md: 4, sm: 6, xs: 12 }}
+                  key={country.id}
+                  display="flex"
+                  justifyContent="center"
+                >
                   <CountryCard cardProps={country} />
                 </Grid>
               );
