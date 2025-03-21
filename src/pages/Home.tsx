@@ -10,7 +10,7 @@ import CountryCard from "../components/CountryCard";
 import { Country } from "../types/countryDetails";
 import NormalInputField, { SelectField } from "../components/SearchFields";
 import { useDebounce } from "use-debounce";
-import SkeletonLoader from "../components/SkeletonLoader";
+import HomeSkeletonLoader from "../components/SkeletonLoader";
 
 const arr = Array.from({ length: 4 }, (_, i) => i + 1);
 
@@ -141,8 +141,12 @@ const Home = () => {
         {countries.length === 0
           ? arr.map(() => {
               return (
-                <Grid size={{ md: 3, sm: 4 }}>
-                  <SkeletonLoader />
+                <Grid
+                  size={{ lg: 3, md: 4, sm: 6, xs: 12 }}
+                  display="flex"
+                  justifyContent="center"
+                >
+                  <HomeSkeletonLoader />
                 </Grid>
               );
             })

@@ -1,6 +1,11 @@
 import { Box, Skeleton } from "@mui/material";
 
-const SkeletonLoader = () => {
+interface imageSkeletonProps {
+  width: number;
+  height: number;
+}
+
+const HomeSkeletonLoader = () => {
   return (
     <Box height={400}>
       <Skeleton width={300} height={180} />
@@ -10,4 +15,8 @@ const SkeletonLoader = () => {
   );
 };
 
-export default SkeletonLoader;
+export const ImageSkeletonLoader = ({ width, height }: imageSkeletonProps) => {
+  return <Skeleton width={`${width}%`} height={height} />;
+};
+
+export default HomeSkeletonLoader;

@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import { getCountriesById } from "../api/countries";
 import NavBtn from "../components/NavBtn";
 import BorderCountry from "../components/BorderCountry";
+import { ImageSkeletonLoader } from "../components/SkeletonLoader";
 
 function formatString(str: string): string {
   const formattedWord = str
@@ -28,7 +29,7 @@ const formatData = (data: string | number | string[]) => {
 
 const Details = () => {
   const { id } = useParams<{ id: string }>();
-  console.log(id);
+  const [isLoading, setIsLoading] = useState(false);
 
   const isSmallScreen = useMediaQuery(useTheme().breakpoints.down("sm"));
 
@@ -50,6 +51,7 @@ const Details = () => {
     if (!id) return;
 
     const fetchCountry = async () => {
+      setIsLoading(true);
       try {
         const response = await getCountriesById(id);
         console.log(response);
@@ -66,13 +68,15 @@ const Details = () => {
           topLevelDomain: response.tld[0],
           currency:
             response.currencies[Object.keys(response.currencies)[0]].name,
-          languages: Object.values(response.languages),
+          languages: Object.values(response.languages) || [],
           borderCountries: response.borders || [],
         });
+        setIsLoading(false);
       } catch (error) {
         console.log(error);
       }
     };
+
     fetchCountry();
   }, [id]);
   return (
@@ -80,12 +84,21 @@ const Details = () => {
       <NavBtn label="Back" icon={WestIcon} link="/" />
       <Grid container mt={5} alignItems="center">
         <Grid size={{ md: 6, sm: 12, xs: 12 }}>
-          <Box
-            component="img"
-            src={countryDetails.image}
-            width="90%"
-            height={350}
-          />
+          {isLoading ? (
+            <ImageSkeletonLoader
+              width={isSmallScreen ? 100 : 90}
+              height={isSmallScreen ? 300 : 400}
+            />
+          ) : (
+            <Box
+              component="img"
+              src={countryDetails.image}
+              sx={{
+                height: { xs: "200px", sm: "300px", lg: "350px" },
+                width: { xs: "100%", sm: "90%" },
+              }}
+            />
+          )}
         </Grid>
         <Grid
           size={{ md: 6, sm: 12, xs: 12 }}
@@ -106,9 +119,11 @@ const Details = () => {
                       <strong>{formatString(value)}</strong>:{" "}
                       {data
                         ? Array.isArray(data)
-                          ? data.join(", ") // Convert arrays to comma-separated string
+                          ? data.length === 0
+                            ? "N/A"
+                            : data.join(", ") // Convert arrays to comma-separated string
                           : typeof data === "number" && data > 999
-                          ? data.toLocaleString()
+                          ? (data as number).toLocaleString()
                           : data
                         : "N/A"}
                     </Typography>
@@ -117,7 +132,7 @@ const Details = () => {
             </Grid>
             <Grid
               size={{ md: 6, sm: 12, xs: 12 }}
-              sx={{ mt: { xs: 4, sm: 4, md: 0 } }}
+              sx={{ mt: { xs: 5, sm: 5, md: 0 } }}
             >
               {Object.keys(countryDetails)
                 .slice(7, 10)
